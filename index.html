@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="StarTran">
+<title>StarTran</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- PASSES SCREEN -->
+<div id="passesScreen" class="screen active">
+
+<div class="container">
+
+    <div class="top-bar">
+        <button class="icon-circle">↻</button>
+        <button class="icon-circle">👤</button>
+    </div>
+
+    <h1>My Passes</h1>
+
+    <button class="pass-card" onclick="openTicket()">
+
+        <div class="card-top">
+            <div class="id-required">ID Required</div>
+            <div class="time-header">Time Left</div>
+        </div>
+
+        <div class="card-body">
+
+            <div class="pass-info">
+
+                <div class="logo-container">
+                    <img src="IMG/StarTran.png" alt="StarTran Logo" class="logo-image">
+                </div>
+
+                <div class="pass-details">
+                    <div class="title">Low Income Fixed Route</div>
+                    <div class="duration">31-Day</div>
+                </div>
+
+            </div>
+
+            <div class="days-left">
+                <div class="number" id="daysRemaining">17</div>
+                <div class="label">days</div>
+            </div>
+
+        </div>
+
+    </button>
+
+</div>
+
+<div class="buy-container">
+    <button class="buy-btn" onclick="window.open('https://www.startran.lincoln.ne.gov','_blank')">
+        Buy Passes
+    </button>
+</div>
+
+</div>
+
+<!-- TICKET SCREEN -->
+<div id="ticketScreen" class="screen">
+
+<div id="overlay">
+    <h1>This site requires your location</h1>
+    <p>Click Yes to continue</p>
+    <button id="allow">Yes</button>
+</div>
+
+<div id="content" class="ticket-container">
+
+    <div class="close-button" onclick="closeTicket()">&times;</div>
+
+    <div class="header">
+        <div class="instruction">
+            <h2>StarTran</h2>
+            Show operator your ticket
+        </div>
+    </div>
+
+    <div class="logo-area">
+        <div class="pulsing-ring"></div>
+        <div class="outer-circle">
+            <div class="inner-circle">
+                <img src="IMG/StarTranLogo.png" alt="StarTran Logo" class="round-image">
+            </div>
+        </div>
+    </div>
+
+    <div class="clock" id="clock"></div>
+
+    <div class="low-income-tag">
+        Low Income
+    </div>
+
+    <div class="ticket-card">
+        <div class="ticket-details">
+            Low Income Fixed Route 31-Day
+        </div>
+
+        <div class="location">
+            Lincoln, NE
+        </div>
+
+        <div class="expiration" id="expiryMessage"></div>
+    </div>
+
+</div>
+</div>
+
+<script>
+function openTicket(){
+    document.getElementById("passesScreen").style.display="none";
+    document.getElementById("ticketScreen").style.display="block";
+}
+
+function closeTicket(){
+    document.getElementById("ticketScreen").style.display="none";
+    document.getElementById("passesScreen").style.display="block";
+}
+
+const today = new Date();
+const expiryDate = new Date(today);
+expiryDate.setDate(today.getDate() + 21);
+expiryDate.setHours(0,0,0,0);
+
+function formatExpiryDate(date){
+    const options={month:'short',day:'numeric',year:'numeric'};
+    return `Expires ${date.toLocaleDateString(undefined,options)} at 12:00 AM`;
+}
+
+document.getElementById('expiryMessage').textContent=formatExpiryDate(expiryDate);
+
+function updateClockManualAmPm(){
+    const now=new Date();
+    let h=now.getHours();
+    let m=String(now.getMinutes()).padStart(2,'0');
+    let s=String(now.getSeconds()).padStart(2,'0');
+    const ampm=h>=12?'PM':'AM';
+    h=h%12||12;
+    document.getElementById("clock").innerHTML=`${h}:${m}:${s} ${ampm}`;
+}
+
+setInterval(updateClockManualAmPm,1000);
+updateClockManualAmPm();
+
+document.getElementById("allow").addEventListener("click",()=>{
+    document.getElementById("overlay").style.display="none";
+    document.getElementById("content").style.display="block";
+
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(()=>{},()=>{});
+    }
+});
+</script>
+
+</body>
+</html>
