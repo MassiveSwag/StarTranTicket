@@ -24,7 +24,7 @@
         </button>
     </div>
     <h1>My Passes</h1>
-    <button class="pass-card" onclick="loadContent('html1')">
+    <button class="pass-card" onclick="loadContent('html2')">
         <div class="card-top">
             <div class="id-required">
                 ID Required
@@ -74,8 +74,8 @@
 					fetch('indexTicket.html')
 			    ]);
 				
-				const html2 = await response1.text();
-				const html1 = await response2.text();
+				const html1 = await response1.text();
+				const html2 = await response2.text();
 				
 				document.getElementById('section-one').innerHTML = html1;
 				document.getElementById('section-two').innerHTML = html2;
