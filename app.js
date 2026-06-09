@@ -10,3 +10,7 @@
 				two.style.display = 'block';
 			}
 		}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadContent();
+});
