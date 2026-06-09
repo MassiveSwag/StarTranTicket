@@ -2,15 +2,29 @@
 <html lang="en">
 <head>
 <title>TokenTransit</title>
+<style>
+    iframe {
+    max-width: 100vw;
+    max-height:
 </head>
 <body>
-	
+<!--
 <iframe id="section-one" src="indexPass.html"></iframe>
 
 <iframe id="section-two"
         src="indexTicket.html"
         style="display:none;"></iframe>
+-->
 
-<script src="app.js"></script>
+<iframe id="contentFrame" src="indexPassTicket.html">></iframe>
+<script>
+function showPass() {
+    document.getElementById('contentFrame').src = 'indexPass.html';
+}
+
+function showTicket() {
+    document.getElementById('contentFrame').src = 'indexTicket.html';
+}
+</script>
 </body>
 </html>
