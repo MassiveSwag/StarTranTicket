@@ -1,3 +1,4 @@
+/*
 function toggleView() {
 			const one = document.getElementById('section-one');
 			const two = document.getElementById('section-two');
@@ -10,7 +11,7 @@ function toggleView() {
 				two.style.display = 'block';
 			}
 		}
-/*
+
 async function loadContent() {
 			try {
 				const [response1, response2] = await Promise.all([
