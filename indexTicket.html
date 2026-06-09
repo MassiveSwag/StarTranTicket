@@ -18,7 +18,7 @@
 <body>
 	<div class="ticket-container">
 	
-	<div class="close-button" onclick="toggleView('one')">&times;</div>
+	<div class="close-button" onclick="loadContent('html1')">&times;</div>
 	
 	<div class="header">
 	<div class="instruction"><h2>StarTran</h2>
@@ -53,6 +53,23 @@
 		</div>
 	</div>
 <script>
+  	async function loadContent() {
+			try {
+				const [response1, response2] = await Promise.all([
+					fetch('indexPass.html'),
+					fetch('indexTicket.html')
+			    ]);
+				
+				const html2 = await response1.text();
+				const html1 = await response2.text();
+				
+				document.getElementById('section-one').innerHTML = html1;
+				document.getElementById('section-two').innerHTML = html2;
+			} catch (error) {
+				console.error('Error loading pages:', error);
+			}
+		}
+
 	// Get the current date and time
 	const today = new Date();
 	// Create a new date object for the future date
