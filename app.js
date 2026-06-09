@@ -10,7 +10,7 @@ function toggleView() {
 				two.style.display = 'block';
 			}
 		}
-
+/*
 async function loadContent() {
 			try {
 				const [response1, response2] = await Promise.all([
@@ -30,5 +30,5 @@ async function loadContent() {
 		
 		
 document.addEventListener('DOMContentLoaded', () => {
-    loadContent();
+    loadContent(); */
 });
