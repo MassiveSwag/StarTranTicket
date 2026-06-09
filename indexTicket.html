@@ -11,7 +11,6 @@
     <meta name="mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-	<script src="app.js" defer></script>
 	<title>Token Transit</title>
 	<!-- Created by Richard Rhodes -->
 </head>
@@ -53,23 +52,6 @@
 		</div>
 	</div>
 <script>
-  	async function loadContent() {
-			try {
-				const [response1, response2] = await Promise.all([
-					fetch('indexPass.html'),
-					fetch('indexTicket.html')
-			    ]);
-				
-				const html1 = await response1.text();
-				const html2 = await response2.text();
-				
-				document.getElementById('section-one').innerHTML = html1;
-				document.getElementById('section-two').innerHTML = html2;
-			} catch (error) {
-				console.error('Error loading pages:', error);
-			}
-		}
-
 	// Get the current date and time
 	const today = new Date();
 	// Create a new date object for the future date
