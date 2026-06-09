@@ -28,9 +28,9 @@
 			} catch (error) {
 				console.error('Error loading pages:', error);
 			}
-		};
+		}
 
-		loadContent('html1');
+
 		
 		function toggleView() {
 			const one = document.getElementById('section-one');
@@ -43,7 +43,9 @@
 				one.style.display = 'none';
 				two.style.display = 'block';
 			}
-		};
+		}
+
+		loadContent('html1');
 	</script>
 </body>
 </html>
