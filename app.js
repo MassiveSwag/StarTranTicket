@@ -28,8 +28,7 @@ async function loadContent() {
 				console.error('Error loading pages:', error);
 			}
 		}
-		
+*/
 		
 document.addEventListener('DOMContentLoaded', () => {
-    loadContent(); */
-});
+    loadContent(); 
