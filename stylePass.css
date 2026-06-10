@@ -40,13 +40,13 @@ body{
 /* ---------- Icons ---------- */
 
 .icon-circle{
-    width:clamp(48px, 8vw, 64px);
-    height:clamp(48px, 8vw, 64px);
+    width:clamp(60px, 8vw, 76px);
+    height:clamp(60px, 8vw, 76px);
     border:none;
     border-radius:50%;
     background:white;
-    font-size:1.5rem;
-    color: black;
+    font-size:1.8rem;
+	color: black;
     cursor:pointer;
     box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
@@ -54,7 +54,7 @@ body{
 /* ---------- Heading ---------- */
 
 h1{
-    font-size:clamp(2rem, 5vw, 4rem);
+    font-size:clamp(4rem, 7vw, 6rem);
     font-weight:700;
     color:#000;
     margin-top:2rem;
@@ -65,13 +65,14 @@ h1{
 
 .pass-card{
     width:100%;
+	height:40%;
     border:none;
     background:white;
     border-radius:20px;
     overflow:hidden;
     text-align:left;
     cursor:pointer;
-    box-shadow:0 4px 10px rgba(0,0,0,.15);
+    box-shadow:0 12px 20px rgba(0,0,0,.20);
     transition:.2s ease;
 }
 
@@ -92,16 +93,17 @@ h1{
     text-align:center;
     font-weight:600;
     padding:.75rem;
-    font-size:clamp(.9rem, 2vw, 1.4rem);
+    font-size:clamp(2rem, 2vw, 2.5rem);
 }
 
 .time-header{
+
     background:#325C91;
     color:white;
     text-align:center;
     font-weight:600;
     padding:.75rem;
-    font-size:clamp(.9rem, 2vw, 1.4rem);
+    font-size:clamp(2rem, 2vw, 2.5rem);
 }
 
 /* ---------- Main Body ---------- */
@@ -110,6 +112,7 @@ h1{
 .card-body{
     display:grid;
     grid-template-columns: 1fr clamp(90px, 18vw, 180px);
+
 }
 
 .time-header,
@@ -152,15 +155,16 @@ h1{
 
 .title{
     color:#1F2B45;
-    font-weight:800;
+    font-weight:700;
 	text-align: right;
-    font-size:clamp(.8rem, 2vw, 2rem);
+    font-size:clamp(2.2rem, 2vw, 2.9rem);
 }
 
 .duration{
     color:#1F2B45;
+	font-weight:700;
 	text-align: right;
-    font-size:clamp(.9rem, 1.5vw, 1.5rem);
+    font-size:clamp(2.2rem, 2vw, 2.9rem);
 }
 
 /* ---------- Right Side ---------- */
@@ -177,11 +181,11 @@ h1{
 .number{
     line-height:1;
     font-weight:700;
-    font-size:clamp(2.5rem, 8vw, 5.5rem);
+    font-size:clamp(3.5rem, 12vw, 6.5rem);
 }
 
 .label{
-    font-size:clamp(.8rem, 1.5vw, 1.5rem);
+    font-size:clamp(1.4rem, 2.5vw, 2.1rem);
 }
 
 /* ---------- Buy Button ---------- */
@@ -189,7 +193,7 @@ h1{
 .buy-container{
     width:min(95vw, 900px);
     margin:auto;
-    padding:0 1rem 2rem;
+    padding:0 1rem 3rem;
 }
 
 .buy-btn{
@@ -200,7 +204,7 @@ h1{
     background:#D89A3F;
     color:white;
     cursor:pointer;
-    font-size:clamp(1.2rem, 2vw, 2rem);
+    font-size:clamp(2.6rem, 8vw, 3rem);
     font-weight:600;
     transition:.2s ease;
 }
