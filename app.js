@@ -28,7 +28,24 @@ async function loadContent() {
 				console.error('Error loading pages:', error);
 			}
 		}
-*/
-		
+        
+    
 document.addEventListener('DOMContentLoaded', () => {
     loadContent(); 
+)};
+*/
+
+function showPass() {
+    document.getElementById('contentFrame').src = 'indexPass.html';
+}
+
+function showTicket() {
+    document.getElementById('contentFrame').src = 'indexTicket.html';
+}
+document.addEventListener('DOMContentLoaded', () => {
+    showPass();
+});
+
+
+    
+    
