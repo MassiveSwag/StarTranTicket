@@ -106,17 +106,17 @@
 			25% {
                 transform: scale(0.8);
 				opacity: 1;
-                border-width: 55px;
+                border-width: 65px;
 			}
             35% {
                 transform: scale(0.6);
 				opacity: 1;
-                border-width: 55px;
+                border-width: 65px;
 			}
             50% {
                 transform: scale(0.8);
 				opacity: 1;
-                border-width: 55px;
+                border-width: 65px;
 			}
             65% {
                 transform: scale(1);
@@ -126,7 +126,7 @@
 			75% {
                 transform: scale(0.6);
 				opacity: 1;
-                border-width: 55px;
+                border-width: 65px;
 			}
             100% {
                 transform: scale(1);
