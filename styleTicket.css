@@ -4,6 +4,7 @@
 
 */
 
+
         body {
 			font-size: clamp(1rem, 10vw, 10rem); 
             font-family: Arial, sans-serif;
@@ -13,7 +14,7 @@
             justify-content: center;
             align-items: flex-end;
             min-height: 100vh;
-			max-width: 100vw;
+			max-width: 98vw;
             overflow: hidden;
         }
         #overlay {
@@ -55,7 +56,7 @@
 
         .ticket-container {
             width: 98%;
-			height: 94%;
+			height: 96%;
             background-color: white;
             padding: 0px 5px 10px 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -110,8 +111,8 @@
             justify-content: center;
             align-items: center;
             position: relative; 
-            width: 220px; 
-            height: 220px;
+            width: 700px; 
+            height: 700px;
             margin: 20px auto 40px auto; /* Center the container */
         }
 
@@ -132,7 +133,7 @@
             0% {
                 transform: scale(1);
                 opacity: 1;
-                border-width: 55px;
+                border-width: 110px;
             }
 			25% {
                 transform: scale(0.8);
@@ -152,17 +153,17 @@
             65% {
                 transform: scale(1);
 				opacity: 1;
-                border-width: 55px;
+                border-width: 110px;
 			}
 			75% {
-                transform: scale(0.8);
+                transform: scale(0.6);
 				opacity: 1;
                 border-width: 55px;
 			}
             100% {
                 transform: scale(1);
                 opacity: 1;
-                border-width: 55px;
+                border-width: 110px;
             }
         }
 		
@@ -192,8 +193,8 @@
 		}
 		
         .inner-circle {
-            width: 80%;
-            height: 80%;
+            width: 75%;
+            height: 75%;
             border-radius: 50%;
             background-color: white;
             display: flex;
@@ -209,8 +210,8 @@
         }
 		
 		.round-image {
-			width: 85%;  /* Set a specific width */
-			height: 85%; /* Set the same height to ensure it's a square */
+			width: 90%;  /* Set a specific width */
+			height: 90%; /* Set the same height to ensure it's a square */
 			border-radius: 50%; /* Makes the square image a perfect circle */
 			object-fit: cover; /* Ensures the image covers the area without stretching */
 		}
@@ -247,7 +248,7 @@
 */
 		.card {
 			background:#fff;
-			border-radius:6px;
+			border-radius:28px;
 			padding:18px;
 			box-shadow: 0 1px 1px rgba(0,0,0,.8);
 			border:1px solid rgba(0,0,0,.05);
