@@ -14,46 +14,14 @@
             justify-content: center;
             align-items: flex-end;
             min-height: 100vh;
-			max-width: 98vw;
+	    max-width: 98vw;
             overflow: hidden;
-        }
-        #overlay {
-           all: unset;
-		   font-size: 0.8em;
-		   position: fixed;
-           inset: 0;
-           background: #111;
-           color: white;
-           display: flex;
-           flex-direction: column;
-           justify-content: center;
-           align-items: center;
-           z-index: 9999;
-           text-align: center;      /* ensures text inside is centered */
-        }
-        #overlay p {
-			all: unset;
-			font-size: 18px;
-			padding-bottom: 8px;
-		}
-		#overlay h1 {
-			all: unset;
-			font-size: 20px;
-			margin: 2px;
-			padding: 1px;
-		}
-        #content {
-           display: none;
         }
         button {
            padding: 8px 10px;
            font-size: 16px;
-           cursor: pointer;
-        }
-        #overlay button {
-            pointer-events: auto;
-        }
-
+         }
+        
         .ticket-container {
             width: 98%;
 			height: 96%;
@@ -234,13 +202,13 @@
             background-color: black;
             color: white;
             /*font-size: 48px;*/
-			font-size: 1.3em;
+	    font-size: 1.3em;
             font-weight: 100;
             padding: 5px 10px;
-            border-radius: 28px;
+            border-radius: 60px;
             display: inline-block;
             margin-bottom: 2%;
-			width:94%;
+	    width:94%;
         }
 		
 /*
@@ -249,10 +217,10 @@
 		.card {
 			background:#fff;
 			border-radius:28px;
-			padding:18px;
+			padding:22px;
 			box-shadow: 0 1px 1px rgba(0,0,0,.8);
 			border:1px solid rgba(0,0,0,.05);
-			margin:15px 20px 0px 20px;
+			margin:15px 25px 0px 25px;
 			text-align: left;
 			
 		}
@@ -260,7 +228,7 @@
         .ticket-details {
             /*font-size: 24px;*/
 			/*font-size: 0.7em; */
-			font-size: 6vw;
+	    font-size: 6.2vw;
             font-weight: 200;
             color: #333;
         }
@@ -268,7 +236,7 @@
         .location{
             /* font-size: 14px; */
             font-size: 0.3em;
-			color: #777;
+	   color: #777;
             margin-bottom: 8%;
         }
 
