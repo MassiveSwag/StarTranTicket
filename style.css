@@ -248,15 +248,6 @@ h1{
     transform:scale(.99);
 }
 
-/* ---------- Screen      ---------- */
-.screen{
-	display:none;
-}
-
-.screen.active{
-	display:block;
-}
-
 /* ---------- Small Phones ---------- */
 
 @media (max-width:480px){
