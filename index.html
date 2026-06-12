@@ -15,11 +15,11 @@
    padding: 0px;
   	background:#ededf1;
  }
-#iframeContent {
+#contentFrame {
     transition: transform .3s ease;
 }
 
-#iframeContent.slideOut {
+#contentFrame.slideOut {
     transform: translateY(100%);
 }
 </style>
@@ -31,7 +31,7 @@
 <script>
 function loadPage(page) {
 
-    const frame = document.getElementById("iframeContent");
+    const frame = document.getElementById("contentFrame");
 
     frame.classList.add("slideOut");
 
