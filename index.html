@@ -15,6 +15,13 @@
    padding: 0px;
   	background:#ededf1;
  }
+#iframeContent {
+    transition: transform .3s ease;
+}
+
+#iframeContent.slideOut {
+    transform: translateY(100%);
+}
 </style>
 <script src="app.js"></script>
 </head>
@@ -22,6 +29,20 @@
 
 <iframe id="contentFrame"></iframe>
 <script>
+function loadPage(page) {
+
+    const frame = document.getElementById("iframeContent");
+
+    frame.classList.add("slideOut");
+
+    setTimeout(() => {
+        frame.src = page;
+
+        frame.onload = function() {
+            frame.classList.remove("slideOut");
+        };
+    }, 300);
+}
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('contentFrame').src = 'indexPass.html';
 });
