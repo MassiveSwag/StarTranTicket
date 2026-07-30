@@ -75,8 +75,8 @@
             justify-content: center;
             align-items: center;
             position: relative; 
-            width: 1em; 
-            height: 1em;
+            width: 4em; 
+            height: 4em;
             margin: 20px auto 40px auto; /* Center the container */
         }
 
