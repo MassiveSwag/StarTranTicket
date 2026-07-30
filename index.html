@@ -5,47 +5,16 @@
 <link rel="icon" type="image/x-icon" href="img/bigTokenFavicon.ico">
 <link rel="apple-touch-icon" href="img/bigTokenFavicon.png">
 <style>
- iframe {
-    width: 100vw;
-    height: 100vh;
-    border: none;
- }
  body {
    margin: 0px;
    padding: 0px;
   	background:#ededf1;
  }
-#contentFrame {
-    transition: transform .3s ease;
-}
-
-#contentFrame.slideOut {
-    transform: translateY(100%);
-}
 </style>
 <script src="app.js"></script>
 </head>
 <body>
 
 <iframe id="contentFrame"></iframe>
-<script>
-function loadPage(page) {
-
-    const frame = document.getElementById("contentFrame");
-
-    frame.classList.add("slideOut");
-
-    setTimeout(() => {
-        frame.src = page;
-
-        frame.onload = function() {
-            frame.classList.remove("slideOut");
-        };
-    }, 300);
-}
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('contentFrame').src = 'indexPass.html';
-});
-</script>
 </body>
 </html>
