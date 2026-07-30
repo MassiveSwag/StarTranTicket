@@ -16,5 +16,24 @@
 <body>
 
 <iframe id="contentFrame"></iframe>
+<script>
+function loadPage(page) {
+
+    const frame = document.getElementById("contentFrame");
+
+    frame.classList.add("slideOut");
+
+    setTimeout(() => {
+        frame.src = page;
+
+        frame.onload = function() {
+            frame.classList.remove("slideOut");
+        };
+    }, 300);
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('contentFrame').src = 'indexPass.html';
+});
+</script>
 </body>
 </html>
