@@ -4,7 +4,7 @@ function showPass() {
 }
 
 function showTicket() {
-    document.getElementById('contentFrame').src = 'indexTicket.html';
+    document.getElementById('contentFrame').src = 'Ticket/index.html';
 }
 
 
