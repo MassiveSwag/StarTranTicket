@@ -36,8 +36,8 @@ body{
 /* ---------- Icons ---------- */
 
 .icon-circle{
-    width:clamp(30px, 0.3vw, 30px);
-    height:clamp(30px, 0.3vw, 30px);
+    width:clamp(24px, 0.3vw, 24px);
+    height:clamp(24px, 0.3vw, 24px);
     border:none;
     border-radius:50%;
     background:white;
