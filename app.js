@@ -1,6 +1,6 @@
 
 function showPass() {
-    document.getElementById('contentFrame').src = 'indexPass.html';
+    document.getElementById('contentFrame').src = 'Pass/index.html';
 }
 
 function showTicket() {
