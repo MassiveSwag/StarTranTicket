@@ -47,7 +47,7 @@ body{
     box-shadow:0 2px 6px rgba(0,0,0,.15);
 }
 
-img{
+.icon-circle img{
     width: 95%;
     height: 95%;
     object-fit: contain;
