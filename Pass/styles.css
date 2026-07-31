@@ -48,8 +48,8 @@ body{
 }
 
 .icon-circle img{
-    width: 95%;
-    height: 95%;
+    width: 1em;
+    height: 1em;
     object-fit: contain;
 }
 
