@@ -166,7 +166,7 @@ h1{
     color:#1F2B45;
 	font-weight:700;
 	text-align: right;
-    font-size:clamp(2rem, 1vw, 2rem);
+    font-size:clamp(1.7rem, 1vw, 1.7rem);
 }
 
 /* ---------- Right Side ---------- */
