@@ -33,15 +33,39 @@ function loadPage(page) {
     frame.classList.add("slideOut");
 
     setTimeout(() => {
+
         frame.src = page;
 
         frame.onload = function() {
+
+            // Start the new page at the bottom
+            frame.contentWindow.scrollTo(0, frame.contentDocument.body.scrollHeight);
+
             frame.classList.remove("slideOut");
+
+            // Slowly scroll from bottom to top
+            setTimeout(() => {
+
+                frame.contentWindow.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: "smooth"
+                });
+
+            }, 100);
+
         };
+
     }, 300);
 }
+
+
 document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('contentFrame').src = 'Pass/index.html';
+
+    const frame = document.getElementById('contentFrame');
+
+    frame.src = 'Pass/index.html';
+
 });
 </script>
 </body>
