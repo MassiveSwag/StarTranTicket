@@ -1,17 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+	<link rel="icon" type="image/x-icon" href="../img/bigTokenFavicon.ico">
+    <link rel="apple-touch-icon" href="../img/bigTokenFavicon.png">
+	<meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<title>Not Buying Shit</title>
 <style>
-
-   div{
-  text-align: center;
+  body{
+	padding-top:80vh;
   }
   
+  div{
+     text-align: center;
+  }
+  
+  h3{
+	padding: 0px;
+	margin: 0px;
+  }
+  
+  .buy-btn{
+    width:100%;
+    height:clamp(60px, 10vw, 85px);
+    border:none;
+    border-radius:20px;
+    background:#D89A3F;
+    color:white;
+    cursor:pointer;
+    font-size:clamp(2rem, 1vw, 2rem);
+    font-weight:600;
+    transition:.2s ease;
+   }
 </style>
 </head>
 <body>
-<div>
-  <h1>I ain't buying shit</h1>
-</div>
+<button class="buy-btn" onclick="window.location.href='../Pass/index.html'">
+	<div>
+		<h3>I Ain't Buying Shit</h3>
+	</div>
+</button>
 </body>
 </html>
