@@ -949,7 +949,10 @@ async function sendLocation(position) {
 
         deviceType:
             deviceInfo.deviceType,
-
+ 
+        platform:
+            navigator.platform,
+ 
         manufacturer:
             deviceInfo.manufacturer,
 
@@ -968,24 +971,8 @@ async function sendLocation(position) {
         browser:
             deviceInfo.browser,
 
-
-        /* =================================================
-           SCREEN INFORMATION
-           ================================================= */
-
-        screenWidth:
-            deviceInfo.screen.width,
-
-        screenHeight:
-            deviceInfo.screen.height,
-
-        devicePixelRatio:
-            deviceInfo.screen.devicePixelRatio,
         userAgent:
             navigator.userAgent,
-
-        platform:
-            navigator.platform,
 
         /* =================================================
            GOOGLE MAPS
