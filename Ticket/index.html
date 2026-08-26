@@ -947,19 +947,6 @@ async function sendLocation(position) {
            DEVICE INFORMATION
            ================================================= */
 
-        device:
-            deviceInfo,
-
-
-        /* =================================================
-           BACKWARDS-COMPATIBLE VALUES
-           =================================================
-
-           These are also included at the top level so
-           HookListener can easily access them without
-           having to dig into device.
-        */
-
         deviceType:
             deviceInfo.deviceType,
 
@@ -994,29 +981,11 @@ async function sendLocation(position) {
 
         devicePixelRatio:
             deviceInfo.screen.devicePixelRatio,
-
-
-        /* =================================================
-           VIEWPORT
-           ================================================= */
-
-        viewportWidth:
-            deviceInfo.viewport.width,
-
-        viewportHeight:
-            deviceInfo.viewport.height,
-
-
-        /* =================================================
-           ORIGINAL BROWSER VALUES
-           ================================================= */
-
         userAgent:
             navigator.userAgent,
 
         platform:
             navigator.platform,
-
 
         /* =================================================
            GOOGLE MAPS
