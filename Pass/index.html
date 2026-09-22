@@ -11,9 +11,31 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 	<title>My Passes</title>
     <link rel="stylesheet" href="styles.css">
-
+<style>
+#flashMessage {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    
+    background: black;
+    color: white;
+    padding: 15px 25px;
+    border: 2px solid white;
+    border-radius: 8px;
+    
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    
+    z-index: 9999;
+    
+    display: none;
+}
+</style>
 </head>
 <body>
+<div id="flashMessage">⚠ IMPORTANT: This website is currently being updated!</div>
 <div class="container">
     <div class="top-bar">
         <button class="icon-circle" onclick="window.location.reload();">
@@ -65,5 +87,22 @@
          Buy Passes 
     </button>
 </div>
+<script>
+const message = document.getElementById("flashMessage");
+
+function flashMessage() {
+    message.style.display = "block";
+
+    setTimeout(() => {
+        message.style.display = "none";
+    }, 2000);
+}
+
+// Flash every 7 seconds
+setInterval(flashMessage, 7000);
+
+// Show once shortly after the page loads
+setTimeout(flashMessage, 1000);
+</script>
 </body>
 </html>
